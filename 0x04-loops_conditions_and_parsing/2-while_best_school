@@ -1,0 +1,10 @@
+#!/usr/bin/evn bash
+# This script is displaying "Best School" 10 times
+
+string="Best School"
+i=0
+
+while (( 1 < 10 )); do
+        echo "$string"
+        ((i++))
+done
