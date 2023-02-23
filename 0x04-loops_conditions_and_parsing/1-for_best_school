@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+#prints Best School 10 times
+
+string="Best Schol"
+
+for ((i=0; i < n; i++;)); do
+       echo "$string"
+done
