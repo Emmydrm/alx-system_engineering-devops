@@ -2,4 +2,4 @@
 # Bash script that displays a list of currently running processes.
 
 echo "Currently running processes"
-ps -ef
+ps -auxf
