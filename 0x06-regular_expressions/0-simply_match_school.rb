@@ -1,2 +1,9 @@
 #!/usr/bin/env ruby
-puts ARGV[0].scan(/School/).join
+
+input = ARGV[0]
+
+if input =~ /School/
+    puts "The input contains the word 'School'."
+else
+    puts "The input does not contain the word 'School'."
+end
