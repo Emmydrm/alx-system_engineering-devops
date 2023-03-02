@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+# Use netstat command to show listening ports
+netstat -ln | grep 'LISTEN' | awk '{print $4}' | while read -r port; do
+  # Use lsof command to get process ID and name for each listening port
+  pid=$(lsof -t -i:"$port")
+  if [ -n "$pid" ]; then
+    name=$(ps -p "$pid" -o comm=)
+    echo "Port $port is being listened to by process $pid ($name)"
+  fi
+done
