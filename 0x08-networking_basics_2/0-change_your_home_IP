@@ -1,25 +1,29 @@
 #!/usr/bin/env bash
 # configures an ubuntu server
 
-#!/usr/bin/env bash
-#Bash script that adds enteries to the /etc/hosts file
-if grep -q "[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}.*localhost$" /etc/hosts
-then
-	cp /etc/hosts ~/hosts.new
-	sed -i 's/[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}.*localhost$/127.0.0.2\tlocalhost/g' ~/hosts.new
-	cp -f ~/hosts.new /etc/hosts
-else
-	cp /etc/hosts ~/hosts.new
-	echo -e "127.0.0.2\tlocalhost" >> ~/hosts.new
-	cp -f ~/hosts.new /etc/hosts
+if [[ $EUID -ne 0 ]]; then
+	echo "This script must be run as root" 2>&1
+	exit 1
 fi
-if grep -q "[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}.*facebook.com$" /etc/hosts
-then
+
+echo "This script will modify your /etc/hosts file to configure your server."
+read -p "Do you want to proceed? (y/n) " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]; then
 	cp /etc/hosts ~/hosts.new
-	sed -i 's/[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}.*facebook\.com$/8.8.8.8\tfacebook.com/g' ~/hosts.new
-	cp -f ~/hosts.new /etc/hosts
+	if ! sed -i 's/127.0.0.1/127.0.0.2/' ~/hosts.new; then
+		echo "Failed to modify the hosts file" 2>&1
+		exit
+	fi
+	if ! echo -e "8.8.8.8\tfacebook.com" >> ~/hosts.new; then
+		echo "Failed to modify the hosts file" 2>&1
+		exit
+	fi
+	if ! cp -f ~/hosts.new /etc/hosts; then
+		echo "Failed to copy the modified hosts file" 2>&1
+		exit 1
+	fi
+	echo "The /etc/hosts file has been successfully modified."
 else
-	cp /etc/hosts ~/hosts.new
-	echo -e "8.8.8.8\tfacebook.com" >> ~/hosts.new
-	cp -f ~/hosts.new /etc/hosts
+	echo "The script has been cancelled."
 fi
