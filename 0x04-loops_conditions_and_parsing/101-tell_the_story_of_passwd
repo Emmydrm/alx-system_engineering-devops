@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 # Displays the content of the file /etc/passwd, using the while loop + IFS
+exec {file_descriptor}<"/etc/passwd"
+declare -a input_array
+while IFS=":" read -r -a input_array -u $file_descriptor
+do
+	echo "The user ${input_array[0]} is part of the ${input_array[3]} gang, lives in ${input_array[5]} and rides ${input_array[6]}. ${input_array[2]}'s place is protected by the passcode ${input_array[1]}, more info about the user here: ${input_array[4]}"
+done
+exec {file_descriptor}>&-
 
-IFS=:
-while read -r a0 a1 a2 a3 a4 a5 a6; do
-	echo "The user $a0 is part of the $a3 gang, lives in $a5 and rides $a6. $a2's place is protected by the passcode $a1, more info about the user here: $a4"
-done < /etc/passwd.
