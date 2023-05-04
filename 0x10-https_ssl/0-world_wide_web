@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# This adorable bash script helps us uncover the secrets of subdomains and their DNS records!
+# Let's dive into the world of digital exploration!
+
+func ()
+{
+	sub_domains=("www" "lb-01" "web-01" "web-02")
+
+	if [ -z $2 ]
+	then
+		for str in ${sub_domains[@]}; do
+			dig_output=$(dig $str.$1 | awk '/ANSWER SECTION/ {getline;print}')
+			record_type=$(echo $dig_output | awk '{print$4}')
+			destination=$(echo $dig_output | awk '{print$5}')
+			echo "The subdomain $str is a $record_type record and points to $destination"
+		done
+	else
+		dig_output=$(dig $2.$1 | awk '/ANSWER SECTION/ {getline;print}')
+		record_type=$(echo $dig_output | awk '{print$4}')
+		destination=$(echo $dig_output | awk '{print$5}')
+		echo "The subdomain $2 is a $record_type record and points to $destination"
+	fi
+}
+
+# Let's embark on a digital journey and explore the wonders of DNS!
+# Feel free to provide a domain and subdomain to uncover their DNS secrets!
+
+func $1 $2
