@@ -1,0 +1,13 @@
+frontend http_front
+    bind *:80
+    redirect scheme https if !{ ssl_fc }
+
+frontend https_front
+    bind *:443 ssl crt /etc/haproxy/certs/holberton.online.pem
+    mode http
+    default_backend servers
+
+backend servers
+    balance roundrobin
+    server server1 web-01:80 check
+    server server2 web-02:80 check
