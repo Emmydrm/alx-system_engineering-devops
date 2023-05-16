@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
-# Configure nginx to run as non-root and listen on port 8080
-old_string="listen 80 default_server;"
-new_string="listen 8080 default_server;"
-sed -i "s/$old_string/$new_string/g" /etc/nginx/sites-available/default
-sed -i "1d" /etc/nginx/nginx.conf
-sed -i "1iuser nginx;" /etc/nginx/nginx.conf
+# Configure nginx to run as non-root and listen on port 8090
+# Stop the Nginx service if it's already running
+service nginx stop
+
+# Modify the Nginx configuration to run as the nginx user
+sed -i 's/user .*/user nginx;/g' /etc/nginx/nginx.conf
+
+# Start the Nginx service
+service nginx start
+
