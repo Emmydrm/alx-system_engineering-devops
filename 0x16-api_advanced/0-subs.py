@@ -18,3 +18,4 @@ def number_of_subscribers(subreddit):
     if 'error' in subreddit_data:
         return 0
     return subreddit_data['data']['subscribers']
+

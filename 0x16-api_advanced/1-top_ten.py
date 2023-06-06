@@ -21,4 +21,3 @@ def top_ten(subreddit):
         details = subreddit_data['data']['children']
         for detail in details:
             print(detail['data']['title'])
-
