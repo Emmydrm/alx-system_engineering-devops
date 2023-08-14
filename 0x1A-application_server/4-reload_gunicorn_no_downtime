@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+# Gracefully reload Gunicorn without causing downtime
+
+# Get the master process PID of Gunicorn
+MASTER_PID=$(ps aux | grep '[g]unicorn' | awk '{print $2}')
+
+# Send a graceful reload signal to the master process
+kill -HUP $MASTER_PID
+
+# Wait for a brief moment to allow workers to restart
+sleep 2
+
+# Display the status of the new Gunicorn processes
+ps aux | grep '[g]unicorn'
+
